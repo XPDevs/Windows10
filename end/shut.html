@@ -11,7 +11,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #0078D7; /* Black background */
+      background-color: #0078D7; /* Initial background */
       font-family: Arial, sans-serif;
       color: #fff; /* Ensure text is visible if needed */
       overflow: hidden;
@@ -66,10 +66,10 @@
       70% { opacity: 0; }
     }
     .message {
-      font-size: 36px;
-      color: #fff;
-      display: none;
-      font-weight: bold;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
@@ -83,11 +83,13 @@
       <div></div>
       <div></div>
     </div>
-    <p>Shutting down</p>
+    <div class="message">Shutting down</div>
   </div>
   <script>
     setTimeout(() => {
       document.getElementById("container").style.display = "none";
+      document.body.style.backgroundColor = "black"; // Instantly switch to black
+
       const message = document.createElement("div");
       message.className = "message";
       message.innerText = "";
@@ -107,4 +109,3 @@
   </script>
 </body>
 </html>
-
