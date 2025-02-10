@@ -11,10 +11,11 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #0078D7; /* Black background */
+      background-color: #0078D7; /* Initial background */
       font-family: Arial, sans-serif;
       color: #fff; /* Ensure text is visible if needed */
       overflow: hidden;
+      transition: background-color 1s ease-in-out;
     }
     .container {
       text-align: center;
@@ -88,6 +89,8 @@
   <script>
     setTimeout(() => {
       document.getElementById("container").style.display = "none";
+      document.body.style.backgroundColor = "black"; // Change background to black
+
       const message = document.createElement("div");
       message.className = "message";
       message.innerText = "";
@@ -110,7 +113,7 @@
       }, 20000);
     }, 10000);
 
-     // Prevent context menu unless Shift is held
+    // Prevent context menu unless Shift is held
     document.addEventListener('contextmenu', function(e) {
         if (!e.shiftKey) {
             e.preventDefault();
@@ -124,4 +127,3 @@
   </script>
 </body>
 </html>
-
