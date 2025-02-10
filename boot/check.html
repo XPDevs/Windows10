@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows 10 Applying Settings</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #0078D7; /* Windows 10 blue */
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      text-align: center;
+      cursor: none;
+    }
+
+    .spinner {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      margin: 20px auto;
+    }
+    .spinner div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      animation: rotate 5s infinite cubic-bezier(0.15, 0.55, 0.85, 0.45), fade 5s infinite step-end;
+    }
+    .spinner div::after {
+      content: "";
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: currentColor;
+      border-radius: 50%;
+      translate: 0 30px;
+    }
+    .spinner div:nth-child(1) { animation-delay: 0s; }
+    .spinner div:nth-child(2) { animation-delay: 0.2s; }
+    .spinner div:nth-child(3) { animation-delay: 0.4s; }
+    .spinner div:nth-child(4) { animation-delay: 0.6s; }
+    .spinner div:nth-child(5) { animation-delay: 0.8s; }
+    .spinner div:nth-child(6) { animation-delay: 1s; }
+
+    @keyframes rotate {
+      0% { transform: rotate(-90deg); }
+      35% { transform: rotate(270deg); }
+      70% { transform: rotate(630deg); }
+      100% { transform: rotate(630deg); }
+    }
+
+    @keyframes fade {
+      0% { opacity: 1; }
+      70% { opacity: 0; }
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="message">Applying computer settings...</div>
+  </div>
+  <script>
+    setTimeout(() => {
+      const isInstalled = localStorage.getItem("isInstalled");
+      window.location.href = "../end/rest.html";
+    }, 20000);
+
+        // Prevent context menu unless Shift is held
+    document.addEventListener('contextmenu', function(e) {
+        if (!e.shiftKey) {
+            e.preventDefault();
+        }
+    });
+
+    // Prevent text selection globally
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+    });
+  </script>
+</body>
+</html>
