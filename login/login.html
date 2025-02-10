@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    /* Modal styling */
+    #desktop-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #modal-content {
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .cancel {
+      background-color: #dc3545;
+    }
+    .cancel:hover {
+      background-color: #b02a37;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="../end/rest.html">Restart</a>
+  <a href="../end/shut.html">Shutdown</a>
+  <a href="#" id="desktop-link">Desktop</a>
+
+  <!-- Modal -->
+  <div id="desktop-modal">
+    <div id="modal-content">
+      <p>There is no way to exit the desktop as it isn't finished. Do you still want to continue?</p>
+      <button onclick="goToDesktop()">Yes, continue</button>
+      <button class="cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    // Show the modal when the Desktop link is clicked
+    document.getElementById("desktop-link").addEventListener("click", function(event) {
+      event.preventDefault(); // Prevent the default link behavior
+      showModal();
+    });
+
+    // Function to show the modal
+    function showModal() {
+      document.getElementById("desktop-modal").style.display = "flex";
+    }
+
+    // Function to close the modal (user cancels)
+    function closeModal() {
+      document.getElementById("desktop-modal").style.display = "none";
+    }
+
+    // Function to go to desktop.html
+    function goToDesktop() {
+      window.location.href = "../desktop/desktop.html";
+    }
+  </script>
+
+</body>
+</html>
+
