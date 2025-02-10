@@ -15,7 +15,6 @@
       font-family: Arial, sans-serif;
       color: #fff; /* Ensure text is visible if needed */
       overflow: hidden;
-      transition: background-color 1s ease-in-out;
     }
     .container {
       text-align: center;
@@ -89,7 +88,7 @@
   <script>
     setTimeout(() => {
       document.getElementById("container").style.display = "none";
-      document.body.style.backgroundColor = "black"; // Change background to black
+      document.body.style.backgroundColor = "black"; // Instantly switch to black
 
       const message = document.createElement("div");
       message.className = "message";
