@@ -88,10 +88,14 @@
   <script>
     setTimeout(() => {
       const isInstalled = localStorage.getItem("isInstalled");
-      window.location.href = "../end/rest.html";
+      if (isInstalled) {
+        window.location.href = "../login/login.html";
+      } else {
+        window.location.href = "../setup/setup.html";
+      }
     }, 20000);
 
-        // Prevent context menu unless Shift is held
+    // Prevent context menu unless Shift is held
     document.addEventListener('contextmenu', function(e) {
         if (!e.shiftKey) {
             e.preventDefault();
