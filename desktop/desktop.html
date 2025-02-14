@@ -271,101 +271,127 @@
   </div>
   
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('powerMenuContainer').style.display = 'none';
-        document.getElementById('powerMenu').style.display = 'none';
-    });
-
-    function toggleMenu(event) {
-        const menu = document.getElementById('powerMenu');
-        const button = event.currentTarget;
-        
-        if (menu.style.display === 'flex') {
-            menu.style.display = 'none';
-        } else {
-            const rect = button.getBoundingClientRect();
-            menu.style.left = `${rect.left}px`;
-            menu.style.bottom = `${window.innerHeight - rect.top}px`;
-            menu.style.display = 'flex';
-        }
-    }
-    
-    function togglePowerMenu(event) {
-        const powerMenu = document.getElementById('powerMenuContainer');
-        const settingsBtn = document.getElementById('settings-btn');
-        
-        if (powerMenu.style.display === 'block') {
-            powerMenu.style.display = 'none';
-        } else {
-            const rect = settingsBtn.getBoundingClientRect();
-            powerMenu.style.left = `${rect.left}px`;
-            powerMenu.style.bottom = `${window.innerHeight - rect.top}px`;
-            powerMenu.style.display = 'block';
-        }
-    }
-
-    document.addEventListener("click", function(event) {
-        const powerMenu = document.getElementById('powerMenuContainer');
-        const powerBtn = document.getElementById('power-btn');
-        const settingsBtn = document.getElementById('settings-btn');
-
-        if (!powerBtn.contains(event.target) && !settingsBtn.contains(event.target) && !powerMenu.contains(event.target)) {
-            powerMenu.style.display = 'none';
-        }
-    });
-
 document.addEventListener("DOMContentLoaded", function() {
-    // Check if the Battery API is supported
+    document.getElementById('powerMenuContainer').style.display = 'none';
+    document.getElementById('powerMenu').style.display = 'none';
+
     if (navigator.getBattery) {
         navigator.getBattery().then(function(battery) {
-            // Function to update the battery icon
             function updateBatteryIcon() {
                 const batteryButton = document.getElementById("battery-btn");
-                const batteryLevel = battery.level * 100; // Get battery level in percentage
+                const batteryLevel = battery.level * 100;
 
                 if (batteryLevel > 75) {
-                    batteryButton.innerHTML = '<i class="bi bi-battery-full"></i>'; // Full battery
+                    batteryButton.innerHTML = '<i class="bi bi-battery-full"></i>';
                 } else if (batteryLevel > 25) {
-                    batteryButton.innerHTML = '<i class="bi bi-battery-half"></i>'; // Half battery
+                    batteryButton.innerHTML = '<i class="bi bi-battery-half"></i>';
                 } else {
-                    batteryButton.innerHTML = '<i class="bi bi-battery-empty"></i>'; // Empty battery
+                    batteryButton.innerHTML = '<img src="img/low.png" alt="Low Battery" style="height: 24px;">';
                 }
             }
 
-            // Initial battery icon update
             updateBatteryIcon();
-
-            // Update icon on battery level change
             battery.addEventListener('levelchange', updateBatteryIcon);
         });
     } else {
-        // Battery API not supported, change the button to show an "X" and display error modal
         const batteryButton = document.getElementById("battery-btn");
-
-        // Set the HTML content for the button with the "X" icon and tooltip
         batteryButton.innerHTML = `
             <i class="bi bi-x-circle"></i>
             <span class="tooltip-text">Battery API not supported</span>
-        `; // Show "X" icon with tooltip
-
-        // Display the error modal
+        `;
         const modal = document.getElementById('battery-error-modal');
         modal.style.display = 'block';
-
-        // Close the modal when the "OK" button is clicked
         const okBtn = document.getElementById('close-modal');
         okBtn.onclick = function() {
             modal.style.display = 'none';
         };
-
-        // Close the modal if the user clicks anywhere outside the modal content
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
         };
     }
+
+    async function detectDevice() {
+        const userAgent = navigator.userAgent;
+        const isDesktop = userAgent.includes("Windows NT") || userAgent.includes("Macintosh") || userAgent.includes("X11") || userAgent.includes("Linux");
+        
+        let isLaptop = false;
+
+        if (navigator.getBattery) {
+            try {
+                const battery = await navigator.getBattery();
+                isLaptop = battery.charging || battery.dischargingTime !== Infinity;
+            } catch (error) {
+                console.error("Battery API not supported:", error);
+            }
+        }
+
+        if (isLaptop) {
+            console.log("Detected: Laptop");
+        } else if (isDesktop) {
+            console.log("Detected: Desktop");
+            document.getElementById("battery-btn").style.display = 'none';
+        }
+    }
+    detectDevice();
 });
+
+document.addEventListener("click", function(event) {
+    const powerMenu = document.getElementById('powerMenuContainer');
+    const powerBtn = document.getElementById('power-btn');
+    const settingsBtn = document.getElementById('settings-btn');
+
+    if (!powerBtn.contains(event.target) && !settingsBtn.contains(event.target) && !powerMenu.contains(event.target)) {
+        powerMenu.style.display = 'none';
+    }
+});
+
+document.addEventListener('contextmenu', function(e) {
+    if (!e.shiftKey) {
+        e.preventDefault();
+    }
+});
+
+document.addEventListener('selectstart', function(e) {
+    e.preventDefault();
+});
+
+function toggleMenu(event) {
+    const menu = document.getElementById('powerMenu');
+    const button = event.currentTarget;
+    
+    if (menu.style.display === 'flex') {
+        menu.style.display = 'none';
+    } else {
+        const rect = button.getBoundingClientRect();
+        menu.style.left = `${rect.left}px`;
+        menu.style.bottom = `${window.innerHeight - rect.top}px`;
+        menu.style.display = 'flex';
+    }
+}
+
+function togglePowerMenu(event) {
+    const powerMenu = document.getElementById('powerMenuContainer');
+    const settingsBtn = document.getElementById('settings-btn');
+    
+    if (powerMenu.style.display === 'block') {
+        powerMenu.style.display = 'none';
+    } else {
+        const rect = settingsBtn.getBoundingClientRect();
+        powerMenu.style.left = `${rect.left}px`;
+        powerMenu.style.bottom = `${window.innerHeight - rect.top}px`;
+        powerMenu.style.display = 'block';
+    }
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        document.getElementById('powerMenuContainer').style.display = 'none';
+        document.getElementById('powerMenu').style.display = 'none';
+    }
+});
+
 
   </script>
 </body>
