@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows 10 desktop Clone</title>
+  <title>Windows 10 Desktop Clone</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
   <link rel="stylesheet" href="./css/index.min.css">
@@ -14,11 +14,12 @@
     .menu {
         background: #333;
         padding: 20px;
-        border-radius: 10px;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
         display: none;
         flex-direction: column;
         position: absolute;
+        height: 80%;
+        width: 50%;
     }
     .menu button {
         background: #444;
@@ -27,19 +28,188 @@
         padding: 10px;
         margin: 5px 0;
         cursor: pointer;
-        border-radius: 5px;
-        text-align: left;
+        text-align: center;
     }
     .menu button:hover {
         background: #555;
     }
+    
+    /* Power button */
+    #power-btn {
+        background: #333;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-size: 18px;
+    }
+    #power-btn:hover {
+        background: #555;
+    }
+
+    #settings-btn {
+        background: #333;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        position: absolute;
+        bottom: 55px;
+        left: 10px;
+        font-size: 18px;
+    }
+    #settings-btn:hover {
+        background: #555;
+    }
+    
+    /* Square power menu that overlays settings button */
+    .power-menu {
+        display: none;
+        background: #333;
+        padding: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        position: absolute;
+        width: 150px;
+        left: 10px;
+        bottom: 55px; /* Same as settings button */
+        z-index: 999;
+    }
+
+    .power-menu button {
+        background: #444;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        text-align: center;
+        width: 100%;
+    }
+
+    .power-menu button:hover {
+        background: #555;
+    }
+    /* Modal Style (Windows 10 Blue Modal) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3); /* Dark transparent background */
+    }
+
+    .modal-content {
+      background-color: #0078d4; /* Windows 10 blue background */
+      color: white; /* White text */
+      margin: 15% auto;
+      padding: 30px;
+      border-radius: 10px; /* Rounded corners */
+      text-align: center;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    .close-btn {
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: #ccc;
+    }
+
+    .ok-btn {
+      background-color: #0063b1; /* Darker blue for button */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .ok-btn:hover {
+      background-color: #005a8e; /* Slightly darker blue on hover */
+    }
+
+    .ok-btn:focus {
+      outline: none; /* Remove focus outline */
+    }
+.windows-btn {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  top: -30px; /* Position the tooltip above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.windows-btn:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+#battery-btn {
+  position: relative;
+  display: inline-block;
+}
+
+#battery-btn .tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  top: -30px; /* Position the tooltip above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+#battery-btn:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
   </style>
 </head>
 <body>
   <section class="desktop"></section>
   <section class="taskbar">
     <button type="button" class="windows-btn" onclick="toggleMenu(event)">
-      <i class="bi bi-windows"></i>
+      <i class="bi bi-windows" ></i>
+     <span class="tooltip-text">Start</span>
     </button>
     <section class="search-container">
       <form>
@@ -59,8 +229,8 @@
       <button type="button" id="wifi-btn">
         <i class="bi bi-wifi"></i>
       </button>
-      <button type="button">
-        <i class="bi bi-battery-half"></i>
+      <button type="button" id="battery-btn">
+        <i class="bi bi-battery-full"></i>
       </button>
       <button type="button">
         <i class="bi bi-volume-up"></i>
@@ -77,13 +247,35 @@
   </section>
   
   <div class="menu" id="powerMenu">
-    <button onclick="location.href='../login/login.html'">Lock</button>
-    <button onclick="location.href='../login/login.html'">Sign Out</button>
-    <button onclick="location.href='../end/rest.html'">Restart</button>
+    <button type="button" id="power-btn" onclick="togglePowerMenu(event)">
+        <i class="bi bi-power"></i> Power
+    </button>
+    <button type="button" id="settings-btn">
+        <i class="bi bi-gear"></i> Settings
+    </button>
+  </div>
+  
+  <!-- Battery API Error Modal -->
+  <div id="battery-error-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>Error</h2>
+      <p>Your browser does not support the Battery API, so battery status monitoring is unavailable.</p>
+      <button class="ok-btn" id="close-modal">OK</button>
+    </div>
+  </div>
+
+  <div class="power-menu" id="powerMenuContainer">
     <button onclick="location.href='../end/shut.html'">Shutdown</button>
+    <button onclick="location.href='../end/rest.html'">Restart</button>
+    <button onclick="location.reload();">Refresh</button>
   </div>
   
   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('powerMenuContainer').style.display = 'none';
+        document.getElementById('powerMenu').style.display = 'none';
+    });
+
     function toggleMenu(event) {
         const menu = document.getElementById('powerMenu');
         const button = event.currentTarget;
@@ -97,6 +289,84 @@
             menu.style.display = 'flex';
         }
     }
+    
+    function togglePowerMenu(event) {
+        const powerMenu = document.getElementById('powerMenuContainer');
+        const settingsBtn = document.getElementById('settings-btn');
+        
+        if (powerMenu.style.display === 'block') {
+            powerMenu.style.display = 'none';
+        } else {
+            const rect = settingsBtn.getBoundingClientRect();
+            powerMenu.style.left = `${rect.left}px`;
+            powerMenu.style.bottom = `${window.innerHeight - rect.top}px`;
+            powerMenu.style.display = 'block';
+        }
+    }
+
+    document.addEventListener("click", function(event) {
+        const powerMenu = document.getElementById('powerMenuContainer');
+        const powerBtn = document.getElementById('power-btn');
+        const settingsBtn = document.getElementById('settings-btn');
+
+        if (!powerBtn.contains(event.target) && !settingsBtn.contains(event.target) && !powerMenu.contains(event.target)) {
+            powerMenu.style.display = 'none';
+        }
+    });
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Check if the Battery API is supported
+    if (navigator.getBattery) {
+        navigator.getBattery().then(function(battery) {
+            // Function to update the battery icon
+            function updateBatteryIcon() {
+                const batteryButton = document.getElementById("battery-btn");
+                const batteryLevel = battery.level * 100; // Get battery level in percentage
+
+                if (batteryLevel > 75) {
+                    batteryButton.innerHTML = '<i class="bi bi-battery-full"></i>'; // Full battery
+                } else if (batteryLevel > 25) {
+                    batteryButton.innerHTML = '<i class="bi bi-battery-half"></i>'; // Half battery
+                } else {
+                    batteryButton.innerHTML = '<i class="bi bi-battery-empty"></i>'; // Empty battery
+                }
+            }
+
+            // Initial battery icon update
+            updateBatteryIcon();
+
+            // Update icon on battery level change
+            battery.addEventListener('levelchange', updateBatteryIcon);
+        });
+    } else {
+        // Battery API not supported, change the button to show an "X" and display error modal
+        const batteryButton = document.getElementById("battery-btn");
+
+        // Set the HTML content for the button with the "X" icon and tooltip
+        batteryButton.innerHTML = `
+            <i class="bi bi-x-circle"></i>
+            <span class="tooltip-text">Battery API not supported</span>
+        `; // Show "X" icon with tooltip
+
+        // Display the error modal
+        const modal = document.getElementById('battery-error-modal');
+        modal.style.display = 'block';
+
+        // Close the modal when the "OK" button is clicked
+        const okBtn = document.getElementById('close-modal');
+        okBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+
+        // Close the modal if the user clicks anywhere outside the modal content
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+    }
+});
+
   </script>
 </body>
 </html>
