@@ -3,33 +3,13 @@ $(() => {
   let listAppsDesktop = [
     {
       image: 'Dump',
-      name: 'Lixeira',
+      name: 'Recycle Bin',
       noArrowIcon: true
     },
     {
       image: 'Chrome',
       name: 'Google\nChrome'
-    },
-    {
-      image: 'Steam',
-      name: 'Steam'
-    },
-    {
-      image: 'Firefox',
-      name: 'Mozilla\nFirefox'
-    },
-    {
-      image: 'Discord',
-      name: 'Discord'
-    },
-    {
-      image: 'Photoshop',
-      name: 'Photoshop'
-    },
-    {
-      image: 'Whatsapp',
-      name: 'Whatsapp'
-    },
+    }
   ];
 
   listAppsDesktop.map(app => {
@@ -57,7 +37,7 @@ $(() => {
   });
 
   let appsTaskbarSection = $('.taskbar .apps');
-  let listAppsTaskbar = ['Explorer', 'Chrome', 'Vscode', 'Discord'];
+  let listAppsTaskbar = ['Explorer', 'Chrome'];
 
   listAppsTaskbar.map(app => {
     appsTaskbarSection.append(`
