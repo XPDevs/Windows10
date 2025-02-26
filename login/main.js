@@ -78,7 +78,7 @@ function validatePassword() {
     var input_pw = document.getElementById("pw");
 
     if (input_pw.value == pw) {
-        window.open("https://platelets.fun/", "_self"); //weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeb
+        window.open("../desktop/destop.html", "_self"); //weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeb
     }
     else {
         switchElement("fake-link", "wrongPassword");
