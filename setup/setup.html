@@ -14,35 +14,35 @@
       margin: 0;
     }
 
-.window {
-      width: 400px;
-      height: 300px;
-      background-color: #08004d; /* Same background as the body */
-      border-left: 1px solid #bed7f7; /* Border on left */
-      border-right: 1px solid #bed7f7; /* Border on right */
-      border-bottom: 1px solid #bed7f7; /* Border on bottom */
+    .window {
+      width: 500px;
+      height: 400px;
+      background-color: #08004d;
+      border-left: 1px solid #bed7f7;
+      border-right: 1px solid #bed7f7;
+      border-bottom: 1px solid #bed7f7;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
       position: absolute;
       cursor: move;
-      border-radius: 5px; /* Slightly curved edges like Windows 7 */
+      border-radius: 5px;
     }
 
     .title-bar {
-      background-color: #bed7f7; /* Bed7f7 colour for title bar */
+      background-color: #bed7f7;
       color: black;
       display: flex;
       align-items: center;
       padding: 5px;
       font-family: Arial, sans-serif;
       font-size: 14px;
-      border-bottom: 1px solid #bed7f7; /* Light grey-blue for top border */
+      border-bottom: 1px solid #bed7f7;
       cursor: move;
     }
 
     .title-bar img {
       width: 16px;
       height: 16px;
-      margin-right: 5px; /* Space between icon and text */
+      margin-right: 5px;
     }
 
     .title-bar span {
@@ -67,7 +67,7 @@
     }
 
     .close {
-      background-color: red; /* Always red */
+      background-color: red;
       color: white;
     }
 
@@ -148,15 +148,68 @@
     .window:active {
       border-color: #888;
     }
-.content a {
-  background-color: #08004d; /* Same as window background */
-  color: white;
-  display: flex;
+
+    .content {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .content img {
+      position: absolute;
+      top: 10px; 
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+    }
+
+    .copyright {
+      position: absolute;
+      bottom: 40px;
+      right: 220px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+
+    /* Style for the dropdown and text on the same line */
+    .dropdown-container {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .dropdown-container p {
+      margin-right: 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+select {
+  width: 200px;
+  padding: 6px;
+  border: 1px solid #bed7f7;
+  background-color: white;  /* Changed from #08004d to white */
+  color: black;  /* Changed from white to black */
   font-family: Arial, sans-serif;
   font-size: 14px;
-margin-bottom: 10px;
+  border-radius: 3px;
 }
 
+option {
+  background-color: white;  /* Ensure the option background is white */
+  color: black;  /* Ensure the option text is black */
+}
+
+select:focus {
+  outline: none;
+  border-color: #bed7f7;
+}
   </style>
 </head>
 <body>
@@ -167,28 +220,29 @@ margin-bottom: 10px;
       <div class="window-controls">
         <div class="control-button minimize">&#x2212;</div>
         <div class="control-button maximize">&#9633;</div>
-        <div class="control-button close">&#10005;</div> <!-- Always red close button -->
+        <div class="control-button close">&#10005;</div>
       </div>
     </div>
 
-    <!-- Window content -->
-<div class="content">
-  <a href="../end/rest.html">Restart</a><br>
-  <a href="../end/shut.html">Shutdown</a><br>
-  <a href="../login/login.html">Login</a>
-</div>
+    <div class="content">
+      <img src="logo.png" alt="Window Icon">
+<a href="../end/rest.html">Restart</a><br>
+<a href="../end/shut.html">Shutdown</a><br>
+<a href="../login/login.html">Login Page</a>
+    </div>
 
-
-    <!-- Resize Handles -->
-    <div class="resize-handle resize-tl"></div>
-    <div class="resize-handle resize-tr"></div>
-    <div class="resize-handle resize-bl"></div>
-    <div class="resize-handle resize-br"></div>
-    <div class="resize-handle resize-t"></div>
-    <div class="resize-handle resize-b"></div>
-    <div class="resize-handle resize-l"></div>
-    <div class="resize-handle resize-r"></div>
+    <div class="copyright">&copy; 2021 Microsoft Corporation. All rights reserved.</div>
   </div>
+
+  <!-- Resize Handles -->
+  <div class="resize-handle resize-tl"></div>
+  <div class="resize-handle resize-tr"></div>
+  <div class="resize-handle resize-bl"></div>
+  <div class="resize-handle resize-br"></div>
+  <div class="resize-handle resize-t"></div>
+  <div class="resize-handle resize-b"></div>
+  <div class="resize-handle resize-l"></div>
+  <div class="resize-handle resize-r"></div>
 
   <script>
     // Make the window draggable
@@ -279,3 +333,4 @@ margin-bottom: 10px;
   </script>
 </body>
 </html>
+
