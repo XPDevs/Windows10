@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learn to Program Windows</title>
+  <title>Setup</title>
   <style>
     body {
       background-color: #08004d;
@@ -149,14 +149,15 @@
       border-color: #888;
     }
 
-    .content {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-direction: column;
-      height: 100%;
-    }
+    /* make the whole content area a flex container */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* horizontal centering */
+  justify-content: center;  /* vertical centering */
+  height: 100%;
+  position: relative;
+}
 
     .content img {
       position: absolute;
@@ -169,8 +170,8 @@
 
     .copyright {
       position: absolute;
-      bottom: 40px;
-      right: 220px;
+      bottom: 15px;
+      right: 222px;
       color: white;
       font-family: Arial, sans-serif;
       font-size: 12px;
@@ -210,12 +211,23 @@ select:focus {
   outline: none;
   border-color: #bed7f7;
 }
+.install {
+  background-color: #08004d;   /* same as window background */
+  color: #fff;                 /* white text */
+  border: 1px solid #fff;      /* visible outline */
+  padding: 12px 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  border-radius: 0;            /* <-- makes it a rectangle */
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
   </style>
 </head>
 <body>
   <div class="window" id="window">
     <div class="title-bar">
-      <img src="setup.png" alt="Setup Icon">
+      <img src="https://xpdevs.github.io/Windows10/setup/setup.png" alt="Setup Icon">
       <span>Windows Setup</span>
       <div class="window-controls">
         <div class="control-button minimize">&#x2212;</div>
@@ -225,10 +237,11 @@ select:focus {
     </div>
 
     <div class="content">
-      <img src="logo.png" alt="Window Icon">
-<a href="../end/rest.html">Restart</a><br>
-<a href="../end/shut.html">Shutdown</a><br>
-<a href="../login/login.html">Login Page</a>
+      <img src="https://xpdevs.github.io/Windows10/setup/logo.png" alt="Window Icon">
+    
+    <center><a href="https://xpdevs.github.io/Windows10/login/login.html" class="install" target="_blank" rel="noopener">
+    Install now
+  </a></center>
     </div>
 
     <div class="copyright">&copy; 2021 Microsoft Corporation. All rights reserved.</div>
