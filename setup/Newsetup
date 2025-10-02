@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup</title>
+  <link rel="stylesheet" href="https://unpkg.com/7.css">
+  <style>
+    body {
+      background-color: #08004d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .window {
+      width: 500px;
+      height: 400px;
+      background-color: #08004d;
+      border-left: 1px solid #bed7f7;
+      border-right: 1px solid #bed7f7;
+      border-bottom: 1px solid #bed7f7;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+      position: absolute;
+      cursor: move;
+      border-radius: 5px;
+    }
+
+    .title-bar {
+      background-color: #bed7f7;
+      color: black;
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      border-bottom: 1px solid #bed7f7;
+      cursor: move;
+    }
+
+    .title-bar img {
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
+    }
+
+    .title-bar span {
+      flex-grow: 1;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .control-button {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: transparent;
+    }
+
+    .close {
+      background-color: red;
+      color: white;
+    }
+
+    .resize-handle {
+      position: absolute;
+      background-color: transparent;
+      cursor: se-resize;
+    }
+
+    .resize-tl {
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      cursor: nw-resize;
+    }
+
+    .resize-tr {
+      top: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      cursor: ne-resize;
+    }
+
+    .resize-bl {
+      bottom: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      cursor: sw-resize;
+    }
+
+    .resize-br {
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      cursor: se-resize;
+    }
+
+    .resize-t {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 5px;
+      cursor: n-resize;
+    }
+
+    .resize-b {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 5px;
+      cursor: s-resize;
+    }
+
+    .resize-l {
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      height: 100%;
+      width: 5px;
+      cursor: w-resize;
+    }
+
+    .resize-r {
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      height: 100%;
+      width: 5px;
+      cursor: e-resize;
+    }
+
+    .window:active {
+      border-color: #888;
+    }
+
+    /* make the whole content area a flex container */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* horizontal centering */
+  justify-content: center;  /* vertical centering */
+  height: 100%;
+  position: relative;
+  background-color: #08004d;
+  border: 3px solid #fff;
+}
+
+    .content img {
+      position: absolute;
+      top: 10px; 
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+    }
+
+    .copyright {
+      position: absolute;
+      bottom: 15px;
+      right: 222px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+
+    /* Style for the dropdown and text on the same line */
+    .dropdown-container {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .dropdown-container p {
+      margin-right: 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+select {
+  width: 200px;
+  padding: 6px;
+  border: 1px solid #bed7f7;
+  background-color: white;  /* Changed from #08004d to white */
+  color: black;  /* Changed from white to black */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+option {
+  background-color: white;  /* Ensure the option background is white */
+  color: black;  /* Ensure the option text is black */
+}
+
+select:focus {
+  outline: none;
+  border-color: #bed7f7;
+}
+.install {
+  background-color: #08004d;   /* same as window background */
+  color: #fff;                 /* white text */
+  border: 1px solid #fff;      /* visible outline */
+  padding: 12px 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  border-radius: 0;            /* <-- makes it a rectangle */
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+  </style>
+</head>
+<body>
+  <div class="window active" style="">
+  <div class="window" id="window">
+    <div class="title-bar">
+      <img src="https://xpdevs.github.io/Windows10/setup/setup.png" alt="Setup Icon">
+      <span>Windows Setup</span>
+      <div class="title-bar-controls">
+      <button aria-label="Minimize"></button>
+      <button aria-label="Maximize"></button>
+      <button aria-label="Close"></button>
+    </div>
+    </div>
+
+    <div class="content">
+      <img src="https://xpdevs.github.io/Windows10/setup/logo.png" alt="Window Icon">
+    
+    <center><a href="https://xpdevs.github.io/Windows10/login/login.html" class="install" target="_blank" rel="noopener">
+    Install now
+  </a></center>
+    
+    <div class="copyright">&copy; 2021 Microsoft Corporation. All rights reserved.</div>
+  </div>
+</div>
+  <!-- Resize Handles -->
+  <div class="resize-handle resize-tl"></div>
+  <div class="resize-handle resize-tr"></div>
+  <div class="resize-handle resize-bl"></div>
+  <div class="resize-handle resize-br"></div>
+  <div class="resize-handle resize-t"></div>
+  <div class="resize-handle resize-b"></div>
+  <div class="resize-handle resize-l"></div>
+  <div class="resize-handle resize-r"></div>
+
+  <script>
+    // Make the window draggable
+    const windowElement = document.getElementById("window");
+    const titleBar = windowElement.querySelector(".title-bar");
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    titleBar.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.clientX - windowElement.getBoundingClientRect().left;
+      offsetY = e.clientY - windowElement.getBoundingClientRect().top;
+      document.addEventListener("mousemove", dragWindow);
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+        document.removeEventListener("mousemove", dragWindow);
+      });
+    });
+
+    function dragWindow(e) {
+      if (isDragging) {
+        windowElement.style.left = `${e.clientX - offsetX}px`;
+        windowElement.style.top = `${e.clientY - offsetY}px`;
+      }
+    }
+    
+    //add the function for allowing the button to be pressed to allow the next screen to be started
+    // function for the X button to show a modal to say that the instilation cannot be stopped and if te setup is canceled it will shutdown
+    
+   function buildModal() {
+  /* overlay – dark background */
+  const overlay = document.createElement('div');
+  overlay.id = 'modal‑overlay';
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    inset: '0',
+    background: 'rgba(0,0,0,0.6)',
+    display: 'none',          // hidden until we need it
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+    fontFamily: 'Arial,Helvetica,sans-serif',
+    color: '#fff',
+    display: 'flex'           // flex‑center the modal
+  });
+
+  /* modal container – exactly the markup you supplied */
+  const modal = document.createElement('div');
+  modal.className = 'window active';
+  modal.style.maxWidth = '200px';
+  modal.style.maxHeight = '150px';
+
+  /* title bar */
+  const titleBar = document.createElement('div');
+  titleBar.className = 'title-bar';
+
+  const titleText = document.createElement('div');
+  titleText.className = 'title-bar-text';
+  titleText.textContent = 'Windows setup';
+  titleBar.appendChild(titleText);
+
+  const controls = document.createElement('div');
+  controls.className = 'title-bar-controls';
+  ['Close'].forEach(lbl => {
+    const btn = document.createElement('button');
+    btn.setAttribute('aria-label', lbl);
+    controls.appendChild(btn);
+  });
+  titleBar.appendChild(controls);
+  modal.appendChild(titleBar);
+
+  /* body */
+  const body = document.createElement('div');
+  body.className = 'window-body has-space';
+  const p = document.createElement('p');
+  p.textContent = "Are you sure you want to cancel Windows instilation";
+  body.appendChild(p);
+  modal.appendChild(body);
+
+  /* put everything together */
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  /* close‑button inside the modal hides the overlay */
+  controls.querySelector('button[aria-label="Close"]').addEventListener('click', () => {
+    overlay.style.display = 'none';
+  });
+
+  return overlay;   // the overlay is what we show/hide
+}
+
+/* -------------------------------------------------
+   2️⃣  X‑button of the main window → show modal
+   ------------------------------------------------- */
+const mainCloseBtn = document.querySelector('button[aria-label="Close"]');
+let modalOverlay = null;          // will hold the overlay after first click
+
+mainCloseBtn.addEventListener('click', e => {
+  e.stopPropagation();           // avoid any other handlers
+  if (!modalOverlay) modalOverlay = buildModal();   // create once
+  modalOverlay.style.display = 'flex';              // show it
+});
+
+
+
+    // Make the window resizable from all sides and corners
+    const resizeHandles = windowElement.querySelectorAll('.resize-handle');
+    let isResizing = false;
+    let resizeDirection;
+
+    resizeHandles.forEach(handle => {
+      handle.addEventListener("mousedown", (e) => {
+        isResizing = true;
+        resizeDirection = e.target.className.split(" ")[1];
+        document.addEventListener("mousemove", resizeWindow);
+        document.addEventListener("mouseup", () => {
+          isResizing = false;
+          document.removeEventListener("mousemove", resizeWindow);
+        });
+      });
+    });
+
+    function resizeWindow(e) {
+      if (isResizing) {
+        const rect = windowElement.getBoundingClientRect();
+        if (resizeDirection === 'resize-tl') {
+          windowElement.style.width = `${rect.right - e.clientX}px`;
+          windowElement.style.height = `${rect.bottom - e.clientY}px`;
+          windowElement.style.left = `${e.clientX}px`;
+          windowElement.style.top = `${e.clientY}px`;
+        } else if (resizeDirection === 'resize-tr') {
+          windowElement.style.width = `${e.clientX - rect.left}px`;
+          windowElement.style.height = `${rect.bottom - e.clientY}px`;
+          windowElement.style.top = `${e.clientY}px`;
+        } else if (resizeDirection === 'resize-bl') {
+          windowElement.style.width = `${rect.right - e.clientX}px`;
+          windowElement.style.height = `${e.clientY - rect.top}px`;
+          windowElement.style.left = `${e.clientX}px`;
+        } else if (resizeDirection === 'resize-br') {
+          windowElement.style.width = `${e.clientX - rect.left}px`;
+          windowElement.style.height = `${e.clientY - rect.top}px`;
+        } else if (resizeDirection === 'resize-t') {
+          windowElement.style.height = `${rect.bottom - e.clientY}px`;
+          windowElement.style.top = `${e.clientY}px`;
+        } else if (resizeDirection === 'resize-b') {
+          windowElement.style.height = `${e.clientY - rect.top}px`;
+        } else if (resizeDirection === 'resize-l') {
+          windowElement.style.width = `${rect.right - e.clientX}px`;
+          windowElement.style.left = `${e.clientX}px`;
+        } else if (resizeDirection === 'resize-r') {
+          windowElement.style.width = `${e.clientX - rect.left}px`;
+        }
+      }
+    }
+
+    // Prevent context menu unless Shift is held
+    document.addEventListener('contextmenu', function(e) {
+        if (!e.shiftKey) {
+            e.preventDefault();
+        }
+    });
+
+    // Prevent text selection globally
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+    });
+
+document.body.style.cursor = 'default';
+
+document.addEventListener('mousemove', () => {
+  document.body.style.cursor = 'default';
+});
+
+document.querySelectorAll('.title-bar, .resize-handle').forEach(el => {
+  el.addEventListener('mouseenter', e => e.stopPropagation());
+  el.addEventListener('mouseover',  e => e.stopPropagation());
+});
+  </script>
+</body>
+</html>
