@@ -5,345 +5,407 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Setup</title>
   <style>
+    :root {
+      --win-blue: #08004d;
+      --win-accent: #bed7f7;
+      --win-text: #ffffff;
+      --win-btn-gray: #e1e1e1;
+      --win-btn-border: #707070;
+      --win-input-border: #7a7a7a;
+    }
+
+    * {
+      box-sizing: border-box;
+      outline: none;
+      cursor: default;
+    }
+
     body {
-      background-color: #08004d;
+      background-color: var(--win-blue);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      overflow: hidden;
+      font-family: "Segoe UI", "Tahoma", sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .window {
-      width: 500px;
-      height: 400px;
-      background-color: #08004d;
-      border-left: 1px solid #bed7f7;
-      border-right: 1px solid #bed7f7;
-      border-bottom: 1px solid #bed7f7;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-      position: absolute;
-      cursor: move;
-      border-radius: 5px;
+    .setup-window {
+      width: 680px;
+      height: 520px;
+      background-color: var(--win-blue);
+      border: 1px solid var(--win-accent);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
     }
 
     .title-bar {
-      background-color: #bed7f7;
-      color: black;
+      background-color: var(--win-accent);
+      color: #000;
       display: flex;
       align-items: center;
-      padding: 5px;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      border-bottom: 1px solid #bed7f7;
+      padding-left: 8px;
+      font-size: 12px;
+      height: 28px;
       cursor: move;
     }
 
-    .title-bar img {
+    .title-bar .icon {
       width: 16px;
       height: 16px;
-      margin-right: 5px;
-    }
-
-    .title-bar span {
-      flex-grow: 1;
+      margin-right: 8px;
     }
 
     .window-controls {
       display: flex;
-      gap: 8px;
+      height: 100%;
+      margin-left: auto;
     }
 
-    .control-button {
-      width: 20px;
-      height: 20px;
+    .control {
+      width: 34px;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      background-color: transparent;
     }
 
-    .close {
-      background-color: red;
-      color: white;
+    .control:hover { background-color: rgba(0,0,0,0.1); }
+    .control.close:hover { background-color: #e81123; color: white; }
+
+    .content-pane {
+      flex-grow: 1;
+      padding: 30px 40px;
+      color: var(--win-text);
+      display: none;
     }
 
-    .resize-handle {
-      position: absolute;
-      background-color: transparent;
-      cursor: se-resize;
+    .content-pane.active { display: block; }
+
+    h1 {
+      font-size: 21px;
+      font-weight: 350;
+      margin: 0 0 25px 0;
+      color: var(--win-accent);
     }
 
-    .resize-tl {
-      top: 0;
-      left: 0;
-      width: 10px;
-      height: 10px;
-      cursor: nw-resize;
+    p { font-size: 13px; line-height: 1.4; margin-bottom: 20px; }
+
+    select {
+      width: 280px;
+      padding: 2px 5px;
+      font-size: 13px;
+      border: 1px solid var(--win-input-border);
+      background: #fff;
+      color: #000;
     }
 
-    .resize-tr {
-      top: 0;
-      right: 0;
-      width: 10px;
-      height: 10px;
-      cursor: ne-resize;
-    }
-
-    .resize-bl {
-      bottom: 0;
-      left: 0;
-      width: 10px;
-      height: 10px;
-      cursor: sw-resize;
-    }
-
-    .resize-br {
-      bottom: 0;
-      right: 0;
-      width: 10px;
-      height: 10px;
-      cursor: se-resize;
-    }
-
-    .resize-t {
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      height: 5px;
-      cursor: n-resize;
-    }
-
-    .resize-b {
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      height: 5px;
-      cursor: s-resize;
-    }
-
-    .resize-l {
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      height: 100%;
-      width: 5px;
-      cursor: w-resize;
-    }
-
-    .resize-r {
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-      height: 100%;
-      width: 5px;
-      cursor: e-resize;
-    }
-
-    .window:active {
-      border-color: #888;
-    }
-
-    /* make the whole content area a flex container */
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;      /* horizontal centering */
-  justify-content: center;  /* vertical centering */
-  height: 100%;
-  position: relative;
-}
-
-    .content img {
-      position: absolute;
-      top: 10px; 
-      left: 50%;
-      transform: translateX(-50%);
-      width: 150px;
-      height: 150px;
-    }
-
-    .copyright {
-      position: absolute;
-      bottom: 15px;
-      right: 222px;
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-    }
-
-    /* Style for the dropdown and text on the same line */
-    .dropdown-container {
+    .footer {
+      height: 75px;
+      padding: 0 40px;
       display: flex;
       align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      min-width: 90px;
+      height: 28px;
+      background: var(--win-btn-gray);
+      border: 1px solid var(--win-btn-border);
+      color: #000;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn:hover:not(:disabled) { background: #e5f1ff; border-color: #0078d7; }
+    .btn:disabled { opacity: 0.5; }
+
+    .os-list {
+      background: white;
+      color: black;
+      border: 1px solid #7a7a7a;
+      height: 180px;
+      overflow-y: auto;
+    }
+    .os-item { padding: 4px 10px; font-size: 13px; }
+    .os-item.selected { background: #0078d7; color: white; }
+
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top: 3px solid #fff;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Progress Items Styling */
+    .status-item {
+      margin-bottom: 12px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .status-item.pending { opacity: 0.5; }
+    .status-item.active { font-weight: bold; }
+    .check { color: #00ff00; font-weight: bold; visibility: hidden; }
+    .check.visible { visibility: visible; }
+
+    /* Restart Modal */
+    #restartModal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 450px;
+      background: #fff;
+      color: #000;
+      border: 1px solid #0078d7;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+      padding: 25px;
+      display: none;
+      z-index: 2000;
+    }
+
+    #restartModal h2 {
+      font-size: 18px;
+      font-weight: normal;
+      color: #003399;
+      margin: 0 0 15px 0;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 25px;
+      background: #eee;
+      border: 1px solid #ccc;
+      margin-top: 15px;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #0078d7;
+      width: 0%;
+    }
+
+    .modal-btn-area {
+      display: flex;
+      justify-content: flex-end;
       margin-top: 20px;
     }
-
-    .dropdown-container p {
-      margin-right: 10px;
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-    }
-
-select {
-  width: 200px;
-  padding: 6px;
-  border: 1px solid #bed7f7;
-  background-color: white;  /* Changed from #08004d to white */
-  color: black;  /* Changed from white to black */
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  border-radius: 3px;
-}
-
-option {
-  background-color: white;  /* Ensure the option background is white */
-  color: black;  /* Ensure the option text is black */
-}
-
-select:focus {
-  outline: none;
-  border-color: #bed7f7;
-}
-.install {
-  background-color: #08004d;   /* same as window background */
-  color: #fff;                 /* white text */
-  border: 1px solid #fff;      /* visible outline */
-  padding: 12px 24px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  border-radius: 0;            /* <-- makes it a rectangle */
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
   </style>
 </head>
 <body>
-  <div class="window" id="window">
-    <div class="title-bar">
-      <img src="https://xpdevs.github.io/Windows10/setup/setup.png" alt="Setup Icon">
+
+  <div class="setup-window" id="setupWin">
+    <div class="title-bar" id="dragHandle">
+      <img src="https://xpdevs.github.io/Windows10/setup/setup.png" class="icon">
       <span>Windows Setup</span>
       <div class="window-controls">
-        <div class="control-button minimize">&#x2212;</div>
-        <div class="control-button maximize">&#9633;</div>
-        <div class="control-button close">&#10005;</div>
+        <div class="control">&#x2212;</div>
+        <div class="control">&#9633;</div>
+        <div class="control close" onclick="location.reload()">&#10005;</div>
       </div>
     </div>
 
-    <div class="content">
-      <img src="https://xpdevs.github.io/Windows10/setup/logo.png" alt="Window Icon">
-    
-    <center><a href="https://xpdevs.github.io/Windows10/login/login.html" class="install" target="_blank" rel="noopener">
-    Install now
-  </a></center>
+    <!-- Step 0: Language -->
+    <div class="content-pane active" id="pane-0">
+      <img src="https://xpdevs.github.io/Windows10/setup/logo.png" style="width:130px; margin-bottom:45px;">
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; align-items:center;"><label style="width:180px; font-size:13px;">Language to install:</label><select><option>English (United Kingdom)</option></select></div>
+        <div style="display:flex; align-items:center;"><label style="width:180px; font-size:13px;">Time and format:</label><select><option>English (United Kingdom)</option></select></div>
+        <div style="display:flex; align-items:center;"><label style="width:180px; font-size:13px;">Keyboard method:</label><select><option>United Kingdom</option></select></div>
+      </div>
+      <p style="margin-top: 30px; font-size: 12px; opacity: 0.8;">Click Next to continue.</p>
     </div>
 
-    <div class="copyright">&copy; 2021 Microsoft Corporation. All rights reserved.</div>
+    <!-- Step 1: Splash -->
+    <div class="content-pane" id="pane-1" style="text-align: center; padding-top: 70px;">
+      <img src="https://xpdevs.github.io/Windows10/setup/logo.png" style="width:130px; margin-bottom:50px;"><br>
+      <button class="btn" style="height:auto; padding: 12px 60px; background:none; color:#fff; border:1px solid #fff; font-size:16px;" onclick="goTo('loading')">Install now</button>
+    </div>
+
+    <!-- Step Loading -->
+    <div class="content-pane" id="pane-loading">
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+        <div class="spinner"></div>
+        <p style="margin-top:20px; color:var(--win-accent); font-size: 18px;">Setup is starting</p>
+      </div>
+    </div>
+
+    <!-- Step 2: Edition Selection -->
+    <div class="content-pane" id="pane-2">
+      <h1>Select the version to install</h1>
+      <div class="os-list">
+        <div class="os-item" onclick="selOs(this)">System Home</div>
+        <div class="os-item selected" onclick="selOs(this)">System Pro</div>
+        <div class="os-item" onclick="selOs(this)">System Enterprise</div>
+      </div>
+    </div>
+
+    <!-- Step 3: Progress -->
+    <div class="content-pane" id="pane-progress">
+      <h1>Installing</h1>
+      <div style="margin-top: 20px;">
+        <div class="status-item active" id="row-0"><span class="check" id="check-0">✓</span> <span id="txt-0">Copying files</span></div>
+        <div class="status-item pending" id="row-1"><span class="check" id="check-1">✓</span> <span id="txt-1">Getting ready (0%)</span></div>
+        <div class="status-item pending" id="row-2"><span class="check" id="check-2">✓</span> <span id="txt-2">Applying features</span></div>
+        <div class="status-item pending" id="row-3"><span class="check" id="check-3">✓</span> <span id="txt-3">Finishing up</span></div>
+      </div>
+    </div>
+
+    <!-- Restart Modal -->
+    <div id="restartModal">
+      <h2>Restarting</h2>
+      <p style="font-size:13px;">Windows needs to restart to continue.</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="restartFill"></div>
+      </div>
+      <div class="modal-btn-area">
+        <button class="btn" onclick="finishNow()">Restart now</button>
+      </div>
+    </div>
+
+    <div class="footer" id="setupFooter">
+      <button class="btn" id="btnBack" onclick="prev()" style="visibility:hidden">Back</button>
+      <button class="btn" id="btnNext" onclick="next()">Next</button>
+    </div>
   </div>
 
-  <!-- Resize Handles -->
-  <div class="resize-handle resize-tl"></div>
-  <div class="resize-handle resize-tr"></div>
-  <div class="resize-handle resize-bl"></div>
-  <div class="resize-handle resize-br"></div>
-  <div class="resize-handle resize-t"></div>
-  <div class="resize-handle resize-b"></div>
-  <div class="resize-handle resize-l"></div>
-  <div class="resize-handle resize-r"></div>
-
   <script>
-    // Make the window draggable
-    const windowElement = document.getElementById("window");
-    const titleBar = windowElement.querySelector(".title-bar");
-    let isDragging = false;
-    let offsetX, offsetY;
+    let currentStep = 0;
+    const panes = document.querySelectorAll('.content-pane');
+    const footer = document.getElementById('setupFooter');
+    const bNext = document.getElementById('btnNext');
+    const bBack = document.getElementById('btnBack');
 
-    titleBar.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      offsetX = e.clientX - windowElement.getBoundingClientRect().left;
-      offsetY = e.clientY - windowElement.getBoundingClientRect().top;
-      document.addEventListener("mousemove", dragWindow);
-      document.addEventListener("mouseup", () => {
-        isDragging = false;
-        document.removeEventListener("mousemove", dragWindow);
-      });
-    });
-
-    function dragWindow(e) {
-      if (isDragging) {
-        windowElement.style.left = `${e.clientX - offsetX}px`;
-        windowElement.style.top = `${e.clientY - offsetY}px`;
+    function goTo(id) {
+      if (id === 'loading') {
+        panes.forEach(p => p.classList.remove('active'));
+        document.getElementById('pane-loading').classList.add('active');
+        footer.style.display = 'none';
+        setTimeout(() => { footer.style.display = 'flex'; goTo(2); }, 2000);
+        return;
       }
+      panes.forEach(p => p.classList.remove('active'));
+      const target = isNaN(id) ? document.getElementById(`pane-${id}`) : document.getElementById(`pane-${id}`);
+      target.classList.add('active');
+      currentStep = id;
+      updateUI();
     }
 
-    // Make the window resizable from all sides and corners
-    const resizeHandles = windowElement.querySelectorAll('.resize-handle');
-    let isResizing = false;
-    let resizeDirection;
-
-    resizeHandles.forEach(handle => {
-      handle.addEventListener("mousedown", (e) => {
-        isResizing = true;
-        resizeDirection = e.target.className.split(" ")[1];
-        document.addEventListener("mousemove", resizeWindow);
-        document.addEventListener("mouseup", () => {
-          isResizing = false;
-          document.removeEventListener("mousemove", resizeWindow);
-        });
-      });
-    });
-
-    function resizeWindow(e) {
-      if (isResizing) {
-        const rect = windowElement.getBoundingClientRect();
-        if (resizeDirection === 'resize-tl') {
-          windowElement.style.width = `${rect.right - e.clientX}px`;
-          windowElement.style.height = `${rect.bottom - e.clientY}px`;
-          windowElement.style.left = `${e.clientX}px`;
-          windowElement.style.top = `${e.clientY}px`;
-        } else if (resizeDirection === 'resize-tr') {
-          windowElement.style.width = `${e.clientX - rect.left}px`;
-          windowElement.style.height = `${rect.bottom - e.clientY}px`;
-          windowElement.style.top = `${e.clientY}px`;
-        } else if (resizeDirection === 'resize-bl') {
-          windowElement.style.width = `${rect.right - e.clientX}px`;
-          windowElement.style.height = `${e.clientY - rect.top}px`;
-          windowElement.style.left = `${e.clientX}px`;
-        } else if (resizeDirection === 'resize-br') {
-          windowElement.style.width = `${e.clientX - rect.left}px`;
-          windowElement.style.height = `${e.clientY - rect.top}px`;
-        } else if (resizeDirection === 'resize-t') {
-          windowElement.style.height = `${rect.bottom - e.clientY}px`;
-          windowElement.style.top = `${e.clientY}px`;
-        } else if (resizeDirection === 'resize-b') {
-          windowElement.style.height = `${e.clientY - rect.top}px`;
-        } else if (resizeDirection === 'resize-l') {
-          windowElement.style.width = `${rect.right - e.clientX}px`;
-          windowElement.style.left = `${e.clientX}px`;
-        } else if (resizeDirection === 'resize-r') {
-          windowElement.style.width = `${e.clientX - rect.left}px`;
-        }
-      }
+    function updateUI() {
+      bBack.style.visibility = (currentStep === 0 || currentStep === 1 || currentStep === 'progress') ? 'hidden' : 'visible';
+      bNext.style.display = (currentStep === 1 || currentStep === 'progress') ? 'none' : 'block';
     }
 
-    // Prevent context menu unless Shift is held
-    document.addEventListener('contextmenu', function(e) {
-        if (!e.shiftKey) {
-            e.preventDefault();
-        }
-    });
+    function next() {
+      if (currentStep === 0) goTo(1);
+      else if (currentStep === 2) runInstall();
+    }
 
-    // Prevent text selection globally
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-    });
+    function prev() {
+      if (currentStep > 0 && typeof currentStep === 'number') goTo(currentStep - 1);
+    }
+
+    function selOs(el) {
+      document.querySelectorAll('.os-item').forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    async function runInstall() {
+      goTo('progress');
+      
+      // Step 0: Copying (Instant)
+      await wait(800);
+      document.getElementById('check-0').classList.add('visible');
+      document.getElementById('row-0').classList.remove('active');
+      
+      // Step 1: Getting ready (Progressive)
+      const row1 = document.getElementById('row-1');
+      const txt1 = document.getElementById('txt-1');
+      row1.classList.remove('pending');
+      row1.classList.add('active');
+      
+      let p = 0;
+      await new Promise(resolve => {
+        const iv = setInterval(() => {
+          p += Math.floor(Math.random() * 12) + 2;
+          if (p >= 100) {
+            p = 100;
+            clearInterval(iv);
+            resolve();
+          }
+          txt1.innerText = `Getting ready (${p}%)`;
+        }, 400);
+      });
+      
+      document.getElementById('check-1').classList.add('visible');
+      row1.classList.remove('active');
+      
+      // Step 2: Features
+      const row2 = document.getElementById('row-2');
+      row2.classList.remove('pending');
+      row2.classList.add('active');
+      await wait(1200);
+      document.getElementById('check-2').classList.add('visible');
+      row2.classList.remove('active');
+      
+      // Step 3: Finishing
+      const row3 = document.getElementById('row-3');
+      row3.classList.remove('pending');
+      row3.classList.add('active');
+      await wait(1500);
+      document.getElementById('check-3').classList.add('visible');
+      
+      showRestartModal();
+    }
+
+    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function showRestartModal() {
+      document.getElementById('restartModal').style.display = 'block';
+      const fill = document.getElementById('restartFill');
+      let countdown = 0;
+      const timer = setInterval(() => {
+        countdown += 1;
+        fill.style.width = countdown + '%';
+        if (countdown >= 100) {
+          clearInterval(timer);
+          finishNow();
+        }
+      }, 100); // Fast 10-second bar
+    }
+
+    function finishNow() {
+      window.location.href = "../end/rest-set.html";
+    }
+
+    // Drag Logic
+    const win = document.getElementById('setupWin');
+    const handle = document.getElementById('dragHandle');
+    let isMoving = false, offset = [0,0];
+    handle.onmousedown = (e) => { isMoving = true; offset = [win.offsetLeft - e.clientX, win.offsetTop - e.clientY]; };
+    document.onmouseup = () => isMoving = false;
+    document.onmousemove = (e) => { 
+      if(isMoving) { 
+        win.style.left = (e.clientX + offset[0]) + 'px'; 
+        win.style.top = (e.clientY + offset[1]) + 'px'; 
+        win.style.position = 'absolute'; 
+        win.style.margin = '0'; 
+      }
+    };
   </script>
 </body>
 </html>
-

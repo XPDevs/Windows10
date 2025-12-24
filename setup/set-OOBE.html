@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - Initial Configuration</title>
+  <style>
+    :root {
+      --brand-blue: #0078d7;
+      --text-main: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      outline: none;
+      cursor: default;
+    }
+
+    body {
+      background-color: var(--brand-blue);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      font-family: "Segoe UI", "Tahoma", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      color: var(--text-main);
+    }
+
+    /* Fullscreen Wash */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--brand-blue);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.8s ease-in;
+    }
+
+    .overlay.show { opacity: 1; }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      padding: 40px;
+      animation: slideUp 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    @keyframes slideUp { 
+      from { transform: translateY(30px); opacity: 0; } 
+      to { transform: translateY(0); opacity: 1; } 
+    }
+
+    h1 { font-size: 32px; font-weight: 300; margin-bottom: 20px; }
+    
+    .list-box {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.1);
+      height: 320px;
+      overflow-y: auto;
+      margin-bottom: 25px;
+    }
+
+    .list-item {
+      padding: 15px 20px;
+      font-size: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s;
+    }
+
+    .list-item:hover { background: rgba(255,255,255,0.1); }
+    .list-item.selected { background: rgba(255,255,255,0.2); font-weight: bold; position: relative; }
+    .list-item.selected::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: white; }
+
+    .action-btn {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      color: white;
+      padding: 8px 40px;
+      font-size: 14px;
+      float: right;
+      cursor: pointer;
+    }
+
+    .action-btn:hover { background: white; color: var(--brand-blue); }
+
+    .text-input {
+      width: 400px;
+      padding: 12px;
+      background: rgba(0,0,0,0.2);
+      border: 2px solid rgba(255,255,255,0.4);
+      color: white;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .grid-settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .setting-card {
+      background: rgba(0,0,0,0.15);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    /* Toggle Style */
+    .toggle {
+      width: 40px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 20px;
+      position: relative;
+      cursor: pointer;
+    }
+    .toggle.on { background: #fff; }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 16px; height: 16px;
+      background: #333;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .toggle.on::after { transform: translateX(20px); background: var(--brand-blue); }
+
+    /* Finishing Screen */
+    #final-screen {
+      background: black;
+      transition: background 5s ease;
+      display: none;
+      z-index: 1000;
+    }
+    #final-screen.active-color { background: #004275; }
+
+    .fade-text { transition: opacity 1s ease; }
+  </style>
+</head>
+<body>
+
+  <!-- Region Selection -->
+  <div class="overlay show" id="step-region">
+    <div class="container">
+      <h1>Let's start with region. Is this right?</h1>
+      <div class="list-box">
+        <div class="list-item selected" onclick="selectItem(this)">United Kingdom</div>
+        <div class="list-item" onclick="selectItem(this)">United States</div>
+        <div class="list-item" onclick="selectItem(this)">Australia</div>
+        <div class="list-item" onclick="selectItem(this)">Canada</div>
+        <div class="list-item" onclick="selectItem(this)">Germany</div>
+        <div class="list-item" onclick="selectItem(this)">France</div>
+      </div>
+      <button class="action-btn" onclick="nextStep('step-region', 'step-keyboard')">Yes</button>
+    </div>
+  </div>
+
+  <!-- Keyboard Selection -->
+  <div class="overlay" id="step-keyboard" style="display:none;">
+    <div class="container">
+      <h1>Is this the right keyboard layout?</h1>
+      <div class="list-box" style="height: 220px;">
+        <div class="list-item selected" onclick="selectItem(this)">United Kingdom</div>
+        <div class="list-item" onclick="selectItem(this)">United States</div>
+        <div class="list-item" onclick="selectItem(this)">US International</div>
+      </div>
+      <button class="action-btn" onclick="nextStep('step-keyboard', 'step-user')">Yes</button>
+    </div>
+  </div>
+
+  <!-- Name Entry -->
+  <div class="overlay" id="step-user" style="display:none;">
+    <div class="container">
+      <h1>Who's going to use this?</h1>
+      <p style="font-size:16px; opacity:0.8; margin-bottom:30px;">Type the name you'd like to use.</p>
+      <input type="text" id="username" class="text-input" placeholder="Name">
+      <div style="overflow:hidden">
+        <button class="action-btn" onclick="nextStep('step-user', 'step-privacy')">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Settings -->
+  <div class="overlay" id="step-privacy" style="display:none;">
+    <div class="container">
+      <h1>Choose privacy settings for your device</h1>
+      <div class="grid-settings">
+        <div class="setting-card">
+          <b>Location</b>
+          <p style="font-size:12px; margin:5px 0 10px 0;">Get location-based experiences like directions and weather.</p>
+          <div class="row"><span>On</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+        <div class="setting-card">
+          <b>Diagnostic data</b>
+          <p style="font-size:12px; margin:5px 0 10px 0;">Send info about how you use features.</p>
+          <div class="row"><span>Full</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+        <div class="setting-card">
+          <b>Find my device</b>
+          <p style="font-size:12px; margin:5px 0 10px 0;">Turn on tracking to find your device if you lose it.</p>
+          <div class="row"><span>On</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+        <div class="setting-card">
+          <b>Inking & Typing</b>
+          <p style="font-size:12px; margin:5px 0 10px 0;">Send data to improve recognition.</p>
+          <div class="row"><span>On</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+      <button class="action-btn" onclick="startFinalSequence()">Accept</button>
+    </div>
+  </div>
+
+  <!-- Final Messages -->
+  <div class="overlay" id="final-screen">
+    <div style="text-align:center;">
+      <h1 id="f-h" class="fade-text" style="font-size:48px; font-weight:300;">Hi</h1>
+      <p id="f-p" class="fade-text" style="font-size:20px; opacity:0.8">We're getting everything ready for you.</p>
+    </div>
+  </div>
+
+  <script>
+    function nextStep(currentId, nextId) {
+      const current = document.getElementById(currentId);
+      const next = document.getElementById(nextId);
+      
+      current.classList.remove('show');
+      setTimeout(() => {
+        current.style.display = 'none';
+        next.style.display = 'flex';
+        setTimeout(() => next.classList.add('show'), 50);
+      }, 800);
+    }
+
+    function selectItem(el) {
+      el.parentElement.querySelectorAll('.list-item').forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function startFinalSequence() {
+      const screen = document.getElementById('final-screen');
+      const privacy = document.getElementById('step-privacy');
+      
+      privacy.classList.remove('show');
+      setTimeout(() => {
+        privacy.style.display = 'none';
+        screen.style.display = 'flex';
+        setTimeout(() => screen.classList.add('show'), 50);
+        runTextLoop();
+      }, 800);
+    }
+
+    function runTextLoop() {
+      const screen = document.getElementById('final-screen');
+      const sequence = [
+        ["Hi", "We're getting everything ready for you."],
+        ["This might take several minutes", "Please wait."],
+        ["Leave everything to us", "Almost there..."]
+      ];
+
+      let idx = 0;
+      const h = document.getElementById('f-h');
+      const p = document.getElementById('f-p');
+
+      // Set persistence
+      localStorage.setItem('isInstalled', 'true');
+
+      const loop = setInterval(() => {
+        idx++;
+        if (idx >= sequence.length) {
+          clearInterval(loop);
+          // Destination after the sequence ends
+          console.log("Setup Complete.");
+          window.location.href = "../end/rest.html"; 
+        } else {
+          h.style.opacity = 0;
+          p.style.opacity = 0;
+          setTimeout(() => {
+            h.innerText = sequence[idx][0];
+            p.innerText = sequence[idx][1];
+            h.style.opacity = 1;
+            p.style.opacity = 1;
+            if (idx === 1) screen.classList.add('active-color');
+          }, 1000);
+        }
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
