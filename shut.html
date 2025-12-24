@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image with Spinner</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #0078D7; /* Initial background */
+      font-family: Arial, sans-serif;
+      color: #fff; /* Ensure text is visible if needed */
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    .spinner {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      margin: 20px auto;
+    }
+    .spinner div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      animation: r 5s infinite cubic-bezier(0.15, 0.55, 0.85, 0.45), o 5s infinite step-end;
+    }
+    .spinner div::after {
+      content: "";
+      display: block;
+      width: 5px;
+      height: 5px;
+      background-color: currentColor;
+      border-radius: 100%;
+      translate: 0 27.5px;
+    }
+    .spinner div:nth-child(1) { animation-delay: 0s; }
+    .spinner div:nth-child(2) { animation-delay: 0.2s; }
+    .spinner div:nth-child(3) { animation-delay: 0.4s; }
+    .spinner div:nth-child(4) { animation-delay: 0.6s; }
+    .spinner div:nth-child(5) { animation-delay: 0.8s; }
+    .spinner div:nth-child(6) { animation-delay: 1s; }
+
+    @keyframes r {
+      0% { transform: rotate(-90deg); }
+      35% { transform: rotate(270deg); }
+      70% { transform: rotate(630deg); }
+      100% { transform: rotate(630deg); }
+    }
+
+    @keyframes o {
+      0% { opacity: 1; }
+      70% { opacity: 0; }
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <div class="spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="message">Shutting down</div>
+  </div>
+  <script>
+    setTimeout(() => {
+      document.getElementById("container").style.display = "none";
+      document.body.style.backgroundColor = "black"; // Instantly switch to black
+
+      const message = document.createElement("div");
+      message.className = "message";
+      message.innerText = "";
+      document.body.appendChild(message);
+      message.style.display = "block";
+      
+      // Function to hide the default cursor globally
+      function hideDefaultCursor() {
+        const globalStyle = document.createElement('style');
+        globalStyle.innerHTML = `* { cursor: none !important; }`;
+        document.head.appendChild(globalStyle);
+        console.log("Default cursor hidden");
+      }
+      
+      hideDefaultCursor();
+    }, 10000);
+  </script>
+</body>
+</html>
