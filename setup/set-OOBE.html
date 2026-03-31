@@ -183,54 +183,20 @@
       <button class="action-btn" onclick="nextStep('step-keyboard', 'step-user')">Yes</button>
     </div>
   </div>
-<!-- Name Entry -->
-<div class="overlay" id="step-user" style="display:none;">
-  <div class="container">
-    <h1>Who's going to use this?</h1>
-    <p style="font-size:16px; opacity:0.8; margin-bottom:30px;">Type the name you'd like to use.</p>
-    <input type="text" id="username" class="text-input" placeholder="Name">
-    <div style="overflow:hidden">
-      <button class="action-btn" onclick="saveUserAndNext()">Next</button>
+
+  <!-- Name Entry -->
+  <div class="overlay" id="step-user" style="display:none;">
+    <div class="container">
+      <h1>Who's going to use this?</h1>
+      <p style="font-size:16px; opacity:0.8; margin-bottom:30px;">Type the name you'd like to use.</p>
+      <input type="text" id="username" class="text-input" placeholder="Name">
+      <div style="overflow:hidden">
+        <button class="action-btn" onclick="saveUserAndNext()">Next</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  const dbName = "Windows10DB";
-  const storeName = "Settings";
-
-  function initDB() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(dbName, 1);
-      request.onupgradeneeded = (e) => {
-        const db = e.target.result;
-        if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName);
-        }
-      };
-      request.onsuccess = (e) => resolve(e.target.result);
-      request.onerror = (e) => reject(e.target.error);
-    });
-  }
-
-  async function saveSetting(key, value) {
-    const db = await initDB();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(storeName, "readwrite");
-      const store = transaction.objectStore(storeName);
-      store.put(value, key);
-      transaction.oncomplete = () => resolve();
-      transaction.onerror = (e) => reject(e.target.error);
-    });
-  }
-
-  async function saveUserAndNext() {
-    const name = document.getElementById('username').value || "User";
-    await saveSetting('username', name);
-    nextStep('step-user', 'step-privacy');
-  }
-
-  function nextStep(currentId, nextId) {
+  <!-- Privacy Settings -->
   <div class="overlay" id="step-privacy" style="display:none;">
     <div class="container">
       <h1>Choose privacy settings for your device</h1>
@@ -269,6 +235,40 @@
   </div>
 
   <script>
+    const dbName = "Windows10DB";
+    const storeName = "Settings";
+
+    function initDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, 1);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName);
+          }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function saveSetting(key, value) {
+      const db = await initDB();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, "readwrite");
+        const store = transaction.objectStore(storeName);
+        store.put(value, key);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function saveUserAndNext() {
+      const name = document.getElementById('username').value || "User";
+      await saveSetting('username', name);
+      nextStep('step-user', 'step-privacy');
+    }
+
     function nextStep(currentId, nextId) {
       const current = document.getElementById(currentId);
       const next = document.getElementById(nextId);
