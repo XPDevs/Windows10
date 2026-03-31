@@ -15,7 +15,43 @@ window.onload = function time() {
     document.getElementById('clock').innerHTML = hour + ":" + minute;
     document.getElementById('date').innerHTML = day + ", " + month + " " + date;
 
+    // Load name from IndexedDB
+    loadUser();
+
     var t = setTimeout(time, 500);
+}
+
+const dbName = "Windows10DB";
+const storeName = "Settings";
+
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(dbName, 1);
+    request.onsuccess = (e) => resolve(e.target.result);
+    request.onerror = (e) => reject(e.target.error);
+  });
+}
+
+async function getSetting(key) {
+  try {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(storeName, "readonly");
+      const store = transaction.objectStore(storeName);
+      const request = store.get(key);
+      request.onsuccess = (e) => resolve(e.target.result);
+      request.onerror = (e) => reject(e.target.error);
+    });
+  } catch (e) {
+    return null;
+  }
+}
+
+async function loadUser() {
+    const name = await getSetting('username');
+    if (name) {
+        document.getElementById('name').innerText = name;
+    }
 }
 
 function checkTime(i) {
